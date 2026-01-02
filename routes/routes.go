@@ -1,7 +1,10 @@
 package routes
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/gorilla/mux"
+	"github.com/viveksingh-01/ginger-api/handlers"
+)
 
 func RegisterRoutes(router *mux.Router) {
-	// TO-DO
+	router.HandleFunc("/restaurants", handlers.HandleRestaurants)
 }
