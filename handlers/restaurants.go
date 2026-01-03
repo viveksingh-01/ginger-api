@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -28,5 +29,11 @@ func HandleRestaurants(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(resp.Body)
+
+	// Check status-code received from Swiggy API and handle non 200 response
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		http.Error(w, fmt.Sprintf("Swiggy API returned status %d: %s", resp.StatusCode, string(bodyBytes)), resp.StatusCode)
+		return
+	}
 }
