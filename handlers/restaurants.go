@@ -20,5 +20,13 @@ func HandleRestaurants(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error creating request: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(req.URL)
+
+	// Make request to Swiggy API
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Println(resp.Body)
 }
