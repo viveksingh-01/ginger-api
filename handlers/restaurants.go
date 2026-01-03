@@ -36,4 +36,12 @@ func HandleRestaurants(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Swiggy API returned status %d: %s", resp.StatusCode, string(bodyBytes)), resp.StatusCode)
 		return
 	}
+
+	// Read response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error reading response: %v", err), http.StatusInternalServerError)
+		return
+	}
+	fmt.Println(body)
 }
