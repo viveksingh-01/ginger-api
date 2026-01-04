@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"github.com/viveksingh-01/ginger-api/routes"
 )
 
@@ -21,10 +22,18 @@ func main() {
 	r := mux.NewRouter()
 	routes.RegisterRoutes(r)
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{os.Getenv("ALLOWED_ORIGIN")},
+		AllowedMethods:   []string{"GET", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+	handler := c.Handler(r)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "9090"
 	}
 	log.Println("Server started at port:", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
