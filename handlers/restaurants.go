@@ -43,5 +43,13 @@ func HandleRestaurants(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error reading response: %v", err), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(body)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	// Write response to client
+	if _, err := w.Write(body); err != nil {
+		http.Error(w, fmt.Sprintf("Error writing response: %v", err), http.StatusInternalServerError)
+		return
+	}
 }
